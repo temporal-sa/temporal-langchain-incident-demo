@@ -1,0 +1,49 @@
+[project]
+name = "incident-agent"
+version = "0.1.0"
+description = "Durable incident-response copilot: Temporal runs the outer loop, LangChain runs each agent turn, Claude reasons, MCP supplies tools."
+requires-python = ">=3.11"
+dependencies = [
+    "temporalio>=1.18.0,<2",
+    "langchain>=1.0,<2",
+    "langchain-core>=1.0,<2",
+    "langchain-anthropic>=1.0,<2",
+    "langchain-mcp-adapters>=0.1.9,<1",
+    "anthropic>=0.50",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "httpx>=0.27",
+    "python-dotenv>=1.0",
+]
+
+# Extra LLM providers. make setup installs the one matching LLM_PROVIDER in .env,
+# or install directly: uv sync --extra openai
+[project.optional-dependencies]
+openai = ["langchain-openai>=1.0"]        # OpenAI, Azure OpenAI, and OpenAI-compatible servers
+ollama = ["langchain-ollama>=1.0"]        # local models through Ollama
+bedrock = ["langchain-aws>=1.0"]          # Amazon Bedrock (Converse API)
+google = ["langchain-google-genai"]       # Gemini API
+mistral = ["langchain-mistralai"]
+groq = ["langchain-groq"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+]
+
+[project.scripts]
+incident-worker = "incident_agent.worker:cli"
+incident-api = "incident_agent.api.app:cli"
+incident-doctor = "incident_agent.doctor:cli"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/incident_agent"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

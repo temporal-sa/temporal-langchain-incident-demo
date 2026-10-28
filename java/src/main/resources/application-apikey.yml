@@ -1,0 +1,5 @@
+# Active when TEMPORAL_API_KEY is set (make java selects it). Temporal Cloud API key auth.
+spring:
+  temporal:
+    connection:
+      apiKey: ${TEMPORAL_API_KEY}

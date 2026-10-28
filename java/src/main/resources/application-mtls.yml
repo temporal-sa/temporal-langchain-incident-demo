@@ -1,0 +1,9 @@
+# Active when TEMPORAL_TLS_CERT and TEMPORAL_TLS_KEY are set (make java selects it).
+# mTLS with a server certificate from a public CA, such as Temporal Cloud.
+# For a self-hosted server with a private CA, also set TEMPORAL_TLS_CA (see TemporalTlsConfig).
+spring:
+  temporal:
+    connection:
+      mtls:
+        key-file: ${TEMPORAL_TLS_KEY}
+        cert-chain-file: ${TEMPORAL_TLS_CERT}

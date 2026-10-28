@@ -1,0 +1,32 @@
+# Change-management worker (Java / Spring Boot).
+# Polls the "change-management" task queue. The Python agent starts
+# ChangeRequestWorkflow here as a child workflow; neither side imports the other.
+
+server:
+  port: ${JAVA_WORKER_PORT:8081}
+  address: ${JAVA_WORKER_HOST:127.0.0.1} # local demo: don't listen on the network
+
+spring:
+  application:
+    name: change-management-worker
+  temporal:
+    connection:
+      target: ${TEMPORAL_ADDRESS:127.0.0.1:7233}
+      # Authentication comes from .env through `make java`, which picks a profile:
+      #   TEMPORAL_API_KEY            -> application-apikey.yml
+      #   TEMPORAL_TLS_CERT + _KEY    -> application-mtls.yml
+      #   TEMPORAL_TLS_CA (private CA)-> config/TemporalTlsConfig.java
+    namespace: ${TEMPORAL_NAMESPACE:default}
+    start-workers: true
+    workersAutoDiscovery:
+      packages:
+        - com.demo.changemgmt
+    workers:
+      - task-queue: change-management
+        name: change-management-worker
+
+logging:
+  level:
+    root: INFO
+    io.temporal: INFO
+    com.demo.changemgmt: INFO

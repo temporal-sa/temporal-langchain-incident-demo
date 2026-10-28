@@ -1,0 +1,26 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+*.egg-info/
+python/.demo-data/
+
+# Node
+node_modules/
+ui/dist/
+
+# Java
+java/target/
+
+# Temporal dev server data and launcher logs
+.temporal/
+.logs/
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
